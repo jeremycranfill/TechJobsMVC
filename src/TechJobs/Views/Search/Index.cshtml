@@ -1,4 +1,5 @@
-﻿<h1>@ViewBag.title</h1>
+﻿
+<h1>@ViewBag.title</h1>
 
 <form action="/Search/Results">
     <h2>Search by:</h2>
@@ -6,14 +7,26 @@
     <p>
         @foreach (KeyValuePair<string, string> column in ViewBag.columns)
         {
-            <span>
+           @if (column.Key == ViewBag.selected)
+           {
+             <span>
                 <input type="radio"
                        name="searchType"
                        id="@column.Key"
-                       value="@column.Key" 
-                       checked="@column.Key == 'all''"/>
+                       value="@column.Key"
+                       checked />
                 <label for="@column.Key">@column.Value</label>
             </span>
+           }
+           else
+           {         <span>
+            <input type="radio"
+                   name="searchType"
+                   id="@column.Key"
+                   value="@column.Key"
+                   />
+            <label for="@column.Key">@column.Value</label>
+        </span>}
         }
     </p>
 
@@ -32,5 +45,26 @@
 
     <h3>@ViewBag.jobs.Count Result(s)</h3>
 
-    // TODO #2 - Loop over jobs dictionary and display all job fields 
-}
+    <h1>@ViewBag.Title</h1>
+    <h2>View All</h2>
+
+        @foreach (Dictionary<string, string> job in ViewBag.jobs)
+        {
+            <table class="job-listing">
+                @foreach (KeyValuePair<string, string> row in job)
+                {
+                    @if (row.Key == "name")
+                    {
+                    <tr><td>@(@row.Key.First().ToString().ToUpper() + @row.Key.Substring(1))</td><td>@row.Value</td></tr>               
+                        }
+                    else {
+                    <tr><td>@(@row.Key.First().ToString().ToUpper() + @row.Key.Substring(1))</td><td><a asp-controller="List" asp-action="Jobs" asp-route-column="@row.Key" asp-route-value="@row.Value">@row.Value</a><td></tr>              }
+
+                }
+                </table>
+                
+                }   
+
+            
+           
+    }
